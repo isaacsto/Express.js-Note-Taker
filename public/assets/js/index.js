@@ -24,7 +24,7 @@ const hide = (elem) => {
 
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
-
+//route to get/read existing notes
 const getNotes = () =>
   fetch('/api/notes', {
     method: 'GET',
@@ -32,7 +32,7 @@ const getNotes = () =>
       'Content-Type': 'application/json',
     },
   });
-
+//route to create new notes 
 const saveNote = (note) =>
   fetch('/api/notes', {
     method: 'POST',
