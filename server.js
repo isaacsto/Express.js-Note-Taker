@@ -22,10 +22,35 @@ app.get('/notes', (req, res) => {
 });
 
 // GET route that returns the index.html file
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, './public/index.html'));
-// });
+ app.get('*', (req, res) => {
+   res.sendFile(path.join(__dirname, './public/index.html'));
+ });
 
+// GET route that reads the db.json file and returns all saved notes as JSON
+app.get('/api/notes', (req, res) => {
+  fs.readFile(path.join(__dirname, './db/db.json'), 'utf8', (err, data) => {
+    if (err) throw err;
+    res.json(JSON.parse(data));
+  });
+});
+
+// POST route receives new note to save on request body, adds it to db.json file, assigns it unique id, and returns the new note as JSON
+app.post('/api/notes', (req, res) => {
+  const newNote = req.body;
+  newNote.id = uuidv4();
+  
+  fs.readFile(path.join(__dirname, './db/db.json'), 'utf8', (err, data) => {
+    if (err) throw err;
+
+    const notes = JSON.parse(data);
+    notes.push(newNote);
+
+    fs.writeFile(path.join(__dirname, './db/db.json'), JSON.stringify(notes), err => {
+      if (err) throw err;
+      res.json(newNote);
+    });
+  });
+});
 
 
 // Start server to begin listening
